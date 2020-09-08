@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kytos-controller
+  labels:
+    app: kytos
+spec:
+  selector:
+    matchLabels:
+      app: kytos
+      role: controller
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kytos
+        role: controller
+    spec:
+      containers:
+      - name: controller
+        image: localhost:30001/kytos
+        command: ["/bin/bash", "-c", "kytosd; sleep infinity"]
+        ports:
+        - containerPort: 8181 # API Port
+        - containerPort: 6653 # Open Flow Port

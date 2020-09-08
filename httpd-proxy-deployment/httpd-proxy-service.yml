@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kytos-proxy
+  labels:
+    app: kytos
+    role: proxy
+spec:
+  type: NodePort
+  ports:
+  - port: 443
+    targetPort: 443
+    nodePort: 30002
+  selector:
+    app: httpd
+    role: proxy
+    tier: frontend

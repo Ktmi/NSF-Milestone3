@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-proxy
+spec:
+  selector:
+    matchLabels:
+      app: httpd
+      role: proxy
+      tier: frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: httpd
+        role: proxy
+        tier: frontend
+    spec:
+      containers:
+      - name: proxy
+        image: localhost:30001/httpd-proxy
+        env:
+        - name: UPSTREAM_LOCATION
+          value: "http://kytos-api:80/"
+        - name: SERVER_NAME
+          value: "kytos-proxy"
+        - name: AUTH_REALM
+          value: "kytos"
+        volumeMounts:
+        - name: ssl-cert
+          mountPath: "/usr/local/apache2/cert"
+          readOnly: true
+        - name: access
+          mountPath: "/usr/local/apache2/access"
+          readOnly: true
+      volumes:
+      - name: ssl-cert
+        secret:
+          secretName: ssl-cert
+      - name: access
+        secret:
+          secretName: kytos-access

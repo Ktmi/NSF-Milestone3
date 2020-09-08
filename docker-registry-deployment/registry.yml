@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-registry-backend
+  labels:
+    app: docker-registry
+    role: backend
+spec:
+  selector:
+    matchLabels:
+      app: docker-registry
+      role: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: docker-registry
+        role: backend
+    spec:
+      containers:
+      - name: backend
+        image: registry:2
+        ports:
+        - containerPort: 5000
